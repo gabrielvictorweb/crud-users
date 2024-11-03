@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String            @id @default(uuid())
+  cpf                   String            @unique @db.VarChar(11)
+  email                 String            @unique
+  name                  String            @db.VarChar(128)
+  birthday              DateTime
+  address               String            @db.VarChar(255)
+  phoneNumber           String            @db.VarChar(11)
+  password              String
+  deletedAt             DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  role                  Role              @default(USER)
+  UserLogsAccountTarget UserLogsAccount[] @relation("userTarget__fkey")
+  UserLogsAccountOwner  UserLogsAccount[] @relation("userOwner__fkey")
+}
+
+model UserLogsAccount {
+  id           String            @id @default(uuid())
+  action       ActionUserAccount @default(CREATED)
+  userTarget   User              @relation("userTarget__fkey", fields: [userIdTarget], references: [id])
+  userIdTarget String
+  userOwner    User              @relation("userOwner__fkey", fields: [userIdOwner], references: [id])
+  userIdOwner  String
+}
+
+enum ActionUserAccount {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+enum Role {
+  USER
+  ADMIN
+}
