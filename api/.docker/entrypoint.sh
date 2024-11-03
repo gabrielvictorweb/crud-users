@@ -1,0 +1,9 @@
+#!/bin/sh
+
+npx prisma generate
+npx prisma db push
+
+npm run test:cov
+# npm run build
+
+npm run start:dev
