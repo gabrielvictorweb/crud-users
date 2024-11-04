@@ -23,8 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       email: payload.email,
       cpf: payload.cpf,
       phoneNumber: payload.phoneNumber,
-      userConfirmation: payload.userConfirmation,
-      profileInvestor: payload.profileInvestor,
     };
   }
 }
