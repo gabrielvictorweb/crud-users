@@ -1,4 +1,4 @@
-FROM node:20.10-alpine
+FROM node:22.9.0-alpine
 
 LABEL maintainer="Gabriel Victor <gabrielvictorweb@gmail.com>"
 
@@ -11,11 +11,10 @@ WORKDIR /api
 COPY ./api .
 
 #Update npm 
-RUN npm install -g npm@latest
+RUN npm install -g npm@10.8.3
 
 # Install dependencies
-RUN npm install
-RUN npm install --save-dev
+RUN npm i
 
 # Expose port 8000
 EXPOSE 8000

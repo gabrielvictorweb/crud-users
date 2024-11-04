@@ -2,8 +2,6 @@
 
 npx prisma generate
 npx prisma db push
-
+npm run db-seed
 npm run test:cov
-# npm run build
-
 npm run start:dev
