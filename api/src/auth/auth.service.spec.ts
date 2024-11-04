@@ -3,7 +3,11 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy, SALT_OR_ROUNDS } from './jwt.strategy';
 import { tokenMock } from './auth.service.mock';
-import { userMock, userServiceMock } from '../user/user.service.mock';
+import {
+  mockPasswordUserTextPlain,
+  userMock,
+  userServiceMock,
+} from '../user/user.service.mock';
 import { jwtServiceMock } from './jwt.service.mock';
 import * as bcrypt from 'bcrypt';
 
@@ -28,13 +32,19 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  it('Validation user credentials success', async () => {
-    const response = await service.validateUser(userMock.email, 'password');
+  it('should return user credentials success', async () => {
+    const response = await service.validateUser(
+      userMock.email,
+      mockPasswordUserTextPlain,
+    );
     expect(response).toEqual(userMock);
   });
 
-  it('Validation user credentials error', async () => {
-    userMock.password = bcrypt.hashSync('password', SALT_OR_ROUNDS);
+  it('should return user credentials error', async () => {
+    userMock.password = bcrypt.hashSync(
+      mockPasswordUserTextPlain,
+      SALT_OR_ROUNDS,
+    );
 
     const response = await service.validateUser(
       userMock.email,
@@ -43,7 +53,17 @@ describe('AuthService', () => {
     expect(response).toEqual(null);
   });
 
-  it('Sign in', async () => {
+  it('should return null to user not found', async () => {
+    userServiceMock.useValue.getUserByEmail = jest.fn().mockResolvedValue(null);
+
+    const response = await service.validateUser(
+      userMock.email,
+      'wrong password',
+    );
+    expect(response).toEqual(null);
+  });
+
+  it('should sign in', async () => {
     const response = await service.login(userMock);
     expect(response).toEqual(tokenMock);
   });
